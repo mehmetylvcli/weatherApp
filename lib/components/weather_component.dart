@@ -31,27 +31,39 @@ class _WeatherComponentState extends State<WeatherComponent> {
 
     for (var item in weather_data.list!) {
       if (daily_weather.isNotEmpty) {
-        if (daily_weather.last[1] != item.dtTxt!.substring(0, 10)) {
+        if (daily_weather.last[1] != item.dtTxt!.substring(0, 10) &&
+            daily_weather.last[4] == item.dtTxt!.substring(11, 16)) {
           var daily_weather_temp = [];
           daily_weather_temp.add(item.weather![0].description);
           daily_weather_temp.add(item.dtTxt!.substring(0, 10));
           daily_weather_temp.add(item.main!.temp);
-          daily_weather_temp.add(item.weather![0].id);
+          daily_weather_temp.add(
+              "http://openweathermap.org/img/wn/${item.weather![0].icon}@2x.png");
+          daily_weather_temp.add(item.dtTxt!.substring(11, 16));
 
-
-          daily_weather.add(daily_weather_temp);
+          setState(() {
+            daily_weather.add(daily_weather_temp);
+          });
         }
       } else {
         var daily_weather_temp = [];
+
         daily_weather_temp.add(item.weather![0].description);
         daily_weather_temp.add(item.dtTxt!.substring(0, 10));
         daily_weather_temp.add(item.main!.temp);
+        daily_weather_temp.add(
+            "http://openweathermap.org/img/wn/${item.weather![0].icon}@2x.png");
+        daily_weather_temp.add(item.dtTxt!.substring(11, 16));
 
-        daily_weather.add(daily_weather_temp);
+        setState(() {
+          daily_weather.add(daily_weather_temp);
+        });
       }
     }
 
     print(daily_weather);
+
+    return daily_weather;
   }
 
   final Geolocator geolocator = Geolocator();
@@ -140,13 +152,14 @@ class _WeatherComponentState extends State<WeatherComponent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xffE9EAE5),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Container(
                 decoration: BoxDecoration(
-                  color: Theme.of(context).canvasColor,
+                  color: Color(0xffE9EAE5),
                 ),
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Column(
@@ -155,10 +168,21 @@ class _WeatherComponentState extends State<WeatherComponent> {
                       alignment: Alignment.topLeft,
                       child: Padding(
                         padding: const EdgeInsets.only(left: 27.0, top: 29),
-                        child: Text(
-                          "Hava Durumu",
-                          style:
-                              TextStyle(color: Color(0xff253031), fontSize: 35),
+                        child: Row(
+                          children: [
+                            Text(
+                              "Hava Durumu",
+                              style: TextStyle(
+                                  color: Color(0xff253031), fontSize: 35),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 30.0),
+                              child: Icon(
+                                Icons.cloudy_snowing,
+                                size: 40,
+                              ),
+                            )
+                          ],
                         ),
                       ),
                     ),
@@ -191,12 +215,16 @@ class _WeatherComponentState extends State<WeatherComponent> {
                                       alignment: Alignment.center,
                                       child: Padding(
                                         padding: const EdgeInsets.all(14.0),
-                                        child: Text(
-                                          " _currentAddress!",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20),
-                                        ),
+                                        child: (_currentAddress == null)
+                                            ? CircularProgressIndicator(
+                                                color: Colors.white,
+                                              )
+                                            : Text(
+                                                _currentAddress!,
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 15),
+                                              ),
                                       )),
                                 )),
                           ),
@@ -206,64 +234,167 @@ class _WeatherComponentState extends State<WeatherComponent> {
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 42.0),
-                      child: Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 7.0),
-                            child: SizedBox(
-                                width: 102,
-                                height: 101,
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  color: Color(0xff0957EB),
-                                  child: Align(
-                                      alignment: Alignment.center,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(14.0),
-                                        child: Text(
-                                          "_currentAddress",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20),
-                                        ),
-                                      )),
-                                )),
-                          ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 11.0),
-                            child: SizedBox(
-                                width: 223,
-                                height: 69,
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  color: Color(0xff0957EB),
-                                  child: Align(
-                                      alignment: Alignment.center,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(14.0),
-                                        child: Text(
-                                          " _currentAddress!",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 15),
-                                        ),
-                                      )),
-                                )),
-                          ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                        ],
+                    Align(
+                      alignment: Alignment.center,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 29),
+                        child: Text(
+                          "4 Günlük Hava Raporu",
+                          style:
+                              TextStyle(color: Color(0xff253031), fontSize: 28),
+                        ),
                       ),
+                    ),
+                    Divider(
+                      color: Colors.black,
+                    ),
+                    Container(
+                      transform: Matrix4.translationValues(0, -30, 0),
+                      child: (daily_weather.isEmpty)
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 208.0),
+                              child: CircularProgressIndicator(
+                                color: Color(0xff0957EB),
+                              ),
+                            )
+                          : ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              scrollDirection: Axis.vertical,
+                              itemCount: (daily_weather.isNotEmpty)
+                                  ? daily_weather.length - 1
+                                  : 0,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 7.0),
+                                      child: SizedBox(
+                                          width: 102,
+                                          height: 101,
+                                          child: Card(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                            ),
+                                            color: Color(0xff0957EB),
+                                            child: Column(
+                                              children: [
+                                                Flexible(
+                                                  flex: 1,
+                                                  child: Row(
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(4.0),
+                                                        child: Align(
+                                                          alignment:
+                                                              Alignment.topLeft,
+                                                          child: Text(
+                                                            daily_weather[index]
+                                                                    [1]
+                                                                .substring(
+                                                                    5, 10)
+                                                                .toString(),
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                left: 10,
+                                                                top: 4.0),
+                                                        child: Align(
+                                                          alignment: Alignment
+                                                              .topRight,
+                                                          child: Text(
+                                                            daily_weather[index]
+                                                                    [4]
+                                                                .toString(),
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Flexible(
+                                                  flex: 3,
+                                                  child: Align(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Image.network(
+                                                          daily_weather[index]
+                                                              [3])),
+                                                ),
+                                              ],
+                                            ),
+                                          )),
+                                    ),
+                                    SizedBox(
+                                      width: 8,
+                                    ),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(left: 11.0),
+                                      child: SizedBox(
+                                          width: 223,
+                                          height: 69,
+                                          child: Card(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                            ),
+                                            color: Color(0xff0957EB),
+                                            child: Row(
+                                              children: [
+                                                Align(
+                                                    alignment:
+                                                        Alignment.topLeft,
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              6.0),
+                                                      child: Text(
+                                                        daily_weather[index][2]
+                                                                .toStringAsFixed(
+                                                                    1) +
+                                                            "°C",
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 15),
+                                                      ),
+                                                    )),
+                                                Align(
+                                                    alignment: Alignment.center,
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              14.0),
+                                                      child: Text(
+                                                        daily_weather[index][0],
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 17),
+                                                      ),
+                                                    )),
+                                              ],
+                                            ),
+                                          )),
+                                    ),
+                                    SizedBox(
+                                      width: 8,
+                                    ),
+                                  ],
+                                );
+                              }),
                     ),
                   ],
                 ))
