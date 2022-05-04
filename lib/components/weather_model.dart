@@ -7,15 +7,15 @@ class WeatherModel {
     if (json['list'] != null) {
       list = <List1>[];
       json['list'].forEach((v) {
-        list!.add(new List1.fromJson(v));
+        list!.add(List1.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.list != null) {
-      data['list'] = this.list!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (list != null) {
+      data['list'] = list!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -45,43 +45,43 @@ class List1 {
 
   List1.fromJson(Map<String, dynamic> json) {
     dt = json['dt'];
-    main = json['main'] != null ? new Main.fromJson(json['main']) : null;
+    main = json['main'] != null ? Main.fromJson(json['main']) : null;
     if (json['weather'] != null) {
       weather = <Weather>[];
       json['weather'].forEach((v) {
-        weather!.add(new Weather.fromJson(v));
+        weather!.add(Weather.fromJson(v));
       });
     }
     clouds =
-        json['clouds'] != null ? new Clouds.fromJson(json['clouds']) : null;
-    wind = json['wind'] != null ? new Wind.fromJson(json['wind']) : null;
+        json['clouds'] != null ? Clouds.fromJson(json['clouds']) : null;
+    wind = json['wind'] != null ? Wind.fromJson(json['wind']) : null;
     visibility = json['visibility'];
     pop = double.parse(json['pop'].toString());
-    sys = json['sys'] != null ? new Sys.fromJson(json['sys']) : null;
+    sys = json['sys'] != null ? Sys.fromJson(json['sys']) : null;
     dtTxt = json['dt_txt'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['dt'] = this.dt;
-    if (this.main != null) {
-      data['main'] = this.main!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['dt'] = dt;
+    if (main != null) {
+      data['main'] = main!.toJson();
     }
-    if (this.weather != null) {
-      data['weather'] = this.weather!.map((v) => v.toJson()).toList();
+    if (weather != null) {
+      data['weather'] = weather!.map((v) => v.toJson()).toList();
     }
-    if (this.clouds != null) {
-      data['clouds'] = this.clouds!.toJson();
+    if (clouds != null) {
+      data['clouds'] = clouds!.toJson();
     }
-    if (this.wind != null) {
-      data['wind'] = this.wind!.toJson();
+    if (wind != null) {
+      data['wind'] = wind!.toJson();
     }
-    data['visibility'] = this.visibility;
-    data['pop'] = this.pop;
-    if (this.sys != null) {
-      data['sys'] = this.sys!.toJson();
+    data['visibility'] = visibility;
+    data['pop'] = pop;
+    if (sys != null) {
+      data['sys'] = sys!.toJson();
     }
-    data['dt_txt'] = this.dtTxt;
+    data['dt_txt'] = dtTxt;
     return data;
   }
 }
@@ -98,8 +98,8 @@ class Main {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['temp'] = this.temp;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['temp'] = temp;
     return data;
   }
 }
@@ -120,11 +120,11 @@ class Weather {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['main'] = this.main;
-    data['description'] = this.description;
-    data['icon'] = this.icon;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['main'] = main;
+    data['description'] = description;
+    data['icon'] = icon;
     return data;
   }
 }
@@ -139,8 +139,8 @@ class Clouds {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['all'] = this.all;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['all'] = all;
     return data;
   }
 }
@@ -157,9 +157,9 @@ class Wind {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['deg'] = this.deg;
-    data['gust'] = this.gust;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['deg'] = deg;
+    data['gust'] = gust;
     return data;
   }
 }
@@ -174,8 +174,8 @@ class Sys {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['pod'] = this.pod;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['pod'] = pod;
     return data;
   }
 }
